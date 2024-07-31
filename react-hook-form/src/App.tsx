@@ -9,9 +9,10 @@ function App() {
     formState: { errors },
     reset,                       //сбрасывает все поля в форме
     /* resetField('name') */     // сбрасывает какое-то конкретное поле
-   /*  getValues,                //getValues и getFieldState не позволяют отслеживать изменения в полях
+   /*  getValues,                //getValues и getFieldState получают текущие значения полей и инфу о полях, но не позволяют отслеживать изменения в полях
     getFieldState */ 
-    watch                        //позволяет отслеживать изменения в полях
+    watch,                       //позволяет отслеживать изменения в полях
+    setValue                     //позволяет изменить значение какого-либо поля
   } = useForm<IShippingFields>({
     /* defaultValues: {
       name: 'Ivan'
@@ -59,6 +60,12 @@ function App() {
           <button>Send</button>
         </div>
       </form>
+      <div>
+          <button onClick={() => {
+            setValue('name', 'Max');
+            setValue('email', 'test@test.ru');
+          }}>Fill data</button>
+        </div>
     </div>
   );
 }
