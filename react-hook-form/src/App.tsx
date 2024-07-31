@@ -11,6 +11,7 @@ function App() {
 
   const onSubmit: SubmitHandler<IShippingFields> = (data) => {
     alert(`Your name ${data.name}`);
+    console.log(data);
   };
 
   return (
@@ -20,9 +21,20 @@ function App() {
           {...register('name', {
             required: 'Name is required field',
           })}
+          placeholder='Name'
         />
         {errors?.name && <div style={{ color: 'red' }}>{errors.name.message}</div>}
-        
+        <input
+          {...register('email', {
+            required: 'Email is required field',
+            pattern: {
+              value: /.+@.+\..+/i,
+              message: 'Please enter valid email',
+            },
+          })}
+          placeholder='Email'
+        />
+        {errors?.email && <div style={{ color: 'red' }}>{errors.email.message}</div>}
         <div>
           <button>Send</button>
         </div>
