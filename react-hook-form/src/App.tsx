@@ -46,7 +46,7 @@ function App() {
   });
 
   const onSubmit: SubmitHandler<IShippingFields> = (data) => {
-    alert(`Your name ${data.name}`);
+    alert(`Your counrty ${data.address.country}`);
     reset();
   };
 
@@ -80,18 +80,18 @@ function App() {
         />
         {errors?.email && <div style={{ color: 'red' }}>{errors.email.message}</div>}
         <Controller
-          control={control}
-          name="address.country"
+          control={control}  //коннектим select с формой (register только для инпутов)
+          name="address.country"        //значение, которое будем менять
           rules={{                            //валидация
             required: 'Country is require',
           }}
-          render={({ field: { onChange, value }, fieldState: { error } }) => (
+          render={({ field: { onChange/*чтобы менять поле*/, value /*чтобы получить текущее состояние*/ }, fieldState: { error } }) => (  //нужна для того, чтобы отрендерить список
             <div>
               <ReactSelect
                 placeholder="Countries"
                 options={options}
                 value={getValue(value)}
-                //onChange={onChange}
+                onChange={newValue => onChange((newValue as IOption).value)}
                 //isMulti={true}        //можно выбирать множество элементов списка
               />
               {error && <div style={{ color: 'red' }}>{error.message}</div>}
