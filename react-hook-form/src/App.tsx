@@ -1,23 +1,48 @@
 import React from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { IShippingFields } from './app.interface';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { IOption, IShippingFields } from './app.interface';
+import ReactSelect from 'react-select';
+
+const options: IOption[] = [
+  {
+    value: 'russia',
+    label: 'Russia',
+  },
+  {
+    value: 'china',
+    label: 'China',
+  },
+  {
+    value: 'usa',
+    label: 'USA',
+  },
+  {
+    value: 'new-zeeland',
+    label: 'New-zeeland',
+  },
+];
+
+const getValue = (value: string) =>            //инициализация селекта
+    value ? options.find((option) => option.value === value) : '';
+  
 
 function App() {
   const {
-    register,
+    register, //register позволяет приконектить поле к форме, но с select он не сработает, сработает только с инпутами
     handleSubmit,
     formState: { errors },
-    reset,                       //сбрасывает все поля в форме
-    /* resetField('name') */     // сбрасывает какое-то конкретное поле
-   /*  getValues,                //getValues и getFieldState получают текущие значения полей и инфу о полях, но не позволяют отслеживать изменения в полях
-    getFieldState */ 
-    watch,                       //позволяет отслеживать изменения в полях
-    setValue                     //позволяет изменить значение какого-либо поля
+    reset, //сбрасывает все поля в форме
+    /* resetField('name') */ // сбрасывает какое-то конкретное поле
+    /*  getValues,                //getValues и getFieldState получают текущие значения полей и инфу о полях, но не позволяют отслеживать изменения в полях
+    getFieldState */
+    watch, //позволяет отслеживать изменения в полях
+    setValue, //позволяет изменить значение какого-либо поля
+    control,
   } = useForm<IShippingFields>({
     /* defaultValues: {
       name: 'Ivan'
     }, */
-    mode: 'onChange'             //теперь ошибка выскакивает при каждом изменении поля пока оно не станет валидным
+    mode: 'onChange', //теперь ошибка выскакивает при каждом изменении поля пока оно не станет валидным
   });
 
   const onSubmit: SubmitHandler<IShippingFields> = (data) => {
@@ -29,11 +54,9 @@ function App() {
   console.log('firld state: ', getFieldState('name')); */
 
   React.useEffect(() => {
-    const subscription = watch((value, { name, type }) =>
-      console.log(value, name, type)
-    )
-    return () => subscription.unsubscribe()
-  }, [watch])                    //эффект срабатывает после изменения в каком-либо поле
+    const subscription = watch((value, { name, type }) => console.log(value, name, type));
+    return () => subscription.unsubscribe();
+  }, [watch]); //эффект срабатывает после изменения в каком-либо поле
 
   return (
     <div className="App">
@@ -42,7 +65,7 @@ function App() {
           {...register('name', {
             required: 'Name is required field',
           })}
-          placeholder='Name'
+          placeholder="Name"
         />
         {errors?.name && <div style={{ color: 'red' }}>{errors.name.message}</div>}
         <input
@@ -53,19 +76,42 @@ function App() {
               message: 'Please enter valid email',
             },
           })}
-          placeholder='Email'
+          placeholder="Email"
         />
         {errors?.email && <div style={{ color: 'red' }}>{errors.email.message}</div>}
+        <Controller
+          control={control}
+          name="address.country"
+          rules={{                            //валидация
+            required: 'Country is require',
+          }}
+          render={({ field: { onChange, value }, fieldState: { error } }) => (
+            <div>
+              <ReactSelect
+                placeholder="Countries"
+                options={options}
+                value={getValue(value)}
+                //onChange={onChange}
+                //isMulti={true}        //можно выбирать множество элементов списка
+              />
+              {error && <div style={{ color: 'red' }}>{error.message}</div>}
+            </div>
+          )}
+        />
+
         <div>
           <button>Send</button>
         </div>
       </form>
       <div>
-          <button onClick={() => {
+        <button
+          onClick={() => {
             setValue('name', 'Max');
             setValue('email', 'test@test.ru');
-          }}>Fill data</button>
-        </div>
+          }}>
+          Fill data
+        </button>
+      </div>
     </div>
   );
 }
