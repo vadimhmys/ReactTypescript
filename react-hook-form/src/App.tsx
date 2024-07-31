@@ -8,7 +8,12 @@ function App() {
     handleSubmit,
     formState: { errors },
     reset
-  } = useForm<IShippingFields>();
+  } = useForm<IShippingFields>({
+    defaultValues: {
+      name: 'Ivan'
+    },
+    mode: 'onChange'
+  });
 
   const onSubmit: SubmitHandler<IShippingFields> = (data) => {
     alert(`Your name ${data.name}`);
