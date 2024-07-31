@@ -7,11 +7,12 @@ function App() {
     register,
     handleSubmit,
     formState: { errors },
+    reset
   } = useForm<IShippingFields>();
 
   const onSubmit: SubmitHandler<IShippingFields> = (data) => {
     alert(`Your name ${data.name}`);
-    console.log(data);
+    reset();
   };
 
   return (
