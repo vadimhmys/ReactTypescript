@@ -7,11 +7,13 @@ function App() {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
+    getValues,
+    getFieldState
   } = useForm<IShippingFields>({
-    defaultValues: {
+    /* defaultValues: {
       name: 'Ivan'
-    },
+    }, */
     mode: 'onChange'
   });
 
@@ -19,6 +21,9 @@ function App() {
     alert(`Your name ${data.name}`);
     reset();
   };
+
+  console.log('values: ', getValues('name'));
+  console.log('firld state: ', getFieldState('name'));
 
   return (
     <div className="App">
