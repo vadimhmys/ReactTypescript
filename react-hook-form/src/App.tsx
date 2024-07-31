@@ -7,14 +7,16 @@ function App() {
     register,
     handleSubmit,
     formState: { errors },
-    reset,
-    getValues,
-    getFieldState
+    reset,                       //сбрасывает все поля в форме
+    /* resetField('name') */     // сбрасывает какое-то конкретное поле
+   /*  getValues,                //getValues и getFieldState не позволяют отслеживать изменения в полях
+    getFieldState */ 
+    watch                        //позволяет отслеживать изменения в полях
   } = useForm<IShippingFields>({
     /* defaultValues: {
       name: 'Ivan'
     }, */
-    mode: 'onChange'
+    mode: 'onChange'             //теперь ошибка выскакивает при каждом изменении поля пока оно не станет валидным
   });
 
   const onSubmit: SubmitHandler<IShippingFields> = (data) => {
@@ -22,8 +24,15 @@ function App() {
     reset();
   };
 
-  console.log('values: ', getValues('name'));
-  console.log('firld state: ', getFieldState('name'));
+  /* console.log('values: ', getValues('name'));
+  console.log('firld state: ', getFieldState('name')); */
+
+  React.useEffect(() => {
+    const subscription = watch((value, { name, type }) =>
+      console.log(value, name, type)
+    )
+    return () => subscription.unsubscribe()
+  }, [watch])                    //эффект срабатывает после изменения в каком-либо поле
 
   return (
     <div className="App">
